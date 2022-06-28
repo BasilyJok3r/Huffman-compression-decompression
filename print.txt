@@ -1,0 +1,35 @@
+void print(string *link)
+{
+	if (link == NULL)
+		return;
+	string *it;
+	it = link;
+	while (it->next != NULL)
+	{
+		printf("%c", it->data);
+		it = it->next;
+	}
+	printf("%c", it->data);
+}
+
+void printt(freq *link)
+{
+	if (link == NULL)
+		return;
+	freq *it;
+	it = link;
+	while (it->next != NULL)
+	{
+		printf("%c:%d\n", it->symbol, it->count);
+		it = it->next;
+	}
+	printf("%c:%d\n", it->symbol, it->count);
+}
+
+int count=0;
+	while (!feof(fcom))
+	{
+		count++;
+		fscanf(fcom, "%c", &txt);
+		str = insertLasts(str, txt);
+	}

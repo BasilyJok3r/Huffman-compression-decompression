@@ -1,0 +1,113 @@
+
+		if (cmp == NULL)
+		{
+			cmp = it->data;
+			count++;
+			tmp = it;
+			it = it->next;
+			str = remove(str, tmp);
+		}
+		else if (it->next == NULL)
+		{
+			if (cmp == it->data && it == str)
+			{
+				count++;
+				str = remove(str, it);
+				table = insertFirstf(table, count, cmp,NULL);
+				break;
+			}
+			else if(cmp == it->data)
+			{
+				count++;
+				tmp = it;
+				str = remove(str, tmp);
+				table = insertFirstf(table, count, cmp,NULL);
+				it = str;
+				cmp = it->data;
+				count = 0;
+			}
+			else
+			{
+				table = insertFirstf(table, count, cmp,NULL);
+				it = str;
+				cmp = it->data;
+				count = 0;
+			}
+		}
+		else if (cmp == it->data)
+		{
+			count++;
+			tmp = it;
+			it = it->next;
+			str = remove(str, tmp);
+		}
+		else
+		{
+			it = it->next;
+		}
+	}
+	free(str);
+
+void decompress() {
+	FILE* output;
+	fopen_s(&output, "output.dat", "rb");
+	FILE* code;
+	fopen_s(&code, "codes.dat", "rb");
+	int extrabits;
+	char ch;
+	int i = 0;
+	int geh = getfile(output) - 2;
+	int no = geh;
+	int* arr = (int*)malloc(geh * sizeof(int));
+	fscanf_s(output, "%d \n", &extrabits);
+	while (geh != 0) {
+		ch = getc(output);
+		arr[i] = (int)ch;
+		i++;
+		geh--;	
+	}
+	arr[i] = '\0';
+
+
+	codelist* h = NULL;
+	char letter = 0; 
+
+	int codes[100];
+
+	 i = 0;
+	while ((ch = getc(code)) != EOF) {
+			letter = ch;
+			while ((ch = getc(code)) != '\n') {
+				if (ch != ' ') {
+					codes[i] = ch - '0';
+					i++;
+				}
+			}
+			h = insertFirst(h, letter, codes, i);
+			i = 0;
+	}
+
+	char character[9];
+	char* Binary = (char*)malloc((8*no*sizeof(char)) + 1);
+	for (i = 0; i < no ; i++) {
+		 chartobin(arr[i], character);
+		 copy(Binary, character, 8*i );
+	}
+	
+	codelist* it = h;
+	char test[100] = { '\0' };
+	int x = 1;
+	test[0] = Binary[0];
+
+	for (i = 1; i <(8*no) - extrabits; i++) {
+		for (it = h; it != NULL; it = it->next) {
+			if (strcmp(it->code, test) == 0 ) {
+				printf("%c", it->letter);
+				reset(test, x);
+				x = 0;
+			}
+		}
+		test[x] = Binary[i];
+		x++;
+	}
+}
